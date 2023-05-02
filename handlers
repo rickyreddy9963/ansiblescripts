@@ -1,0 +1,78 @@
+
+===============================================================================
+                              HANDLERS
+===============================================================================
+
+
+handler is exactly as a normal task.
+handlers name should be unique.
+handlers are the tasks that responed to a notification triggered by other tasks.
+tasks only notify their handlers when the tasks changes something on managed nodes.
+if no tasks notifies  the handlers by name then the handler will not run,
+
+
+======================================================================
+                 handler 
+======================================================================
+
+here condition that both notify and handler name should be unique.
+handlers task should be given at end of the tasks.
+
+
+---
+ - name: updating and restarting the sshd service
+   hosts: all
+   tasks:
+    - name: updating config file
+      copy:
+       src: /etc/ssh/sshd_config
+       dest: /etc/ssh/sshd_config
+      notify: restarting the service
+   handlers:
+    - name: restarting the sshd service
+      service:
+       name: sshd
+       state: restarted
+
+
+
+===============================================================
+                   notify with listen
+===============================================================
+
+
+---
+ - name: updating and restarting the sshd service
+   hosts: all
+   tasks:
+    - name: updating config file from master to nodes
+      copy: 
+       src: /etc/ssh/sshd_config
+       dest: /etc/ssh/sshd_config
+       notify: restart the service
+   handlers:
+    - name: restarting the service
+      service:
+       name: sshd
+       state: restarted
+      listen: restart the service
+	  
+	  
+==================================================================
+            register & when
+==================================================================
+
+---
+ - name: using register and when condition
+   hosts: all
+   tasks:
+    - name: copying the sshd config file from master to nodes
+      copy:
+       src: /etc/ssh/sshd_config
+       dest: /etc/ssh/sshd_config
+       register: restart
+    - name: restarting the sshd service when file updated
+      service:
+       name: sshd
+       state: restarted
+       when: restart.changed
