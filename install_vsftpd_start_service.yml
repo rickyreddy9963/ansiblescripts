@@ -1,0 +1,17 @@
+
+---
+ - name: installing and starting vsftpd service
+   hosts: lab
+   gather_facts: true
+   tasks:
+    - name: installing vsftpd
+      yum:
+       name: vsftpd
+       state: present
+    
+    - name: starting service vsftpd
+      service:
+       name: vsftpd
+       state: started
+       enabled: yes
+

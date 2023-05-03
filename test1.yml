@@ -1,0 +1,11 @@
+
+---
+ - name: ansible playbook
+   hosts: lab
+   gather_facts: true
+   tasks:
+    - name: copy module
+      copy: src=/etc/fstab dest=/tmp/tstab 
+   tasks:
+    - name: change
+      file: dest=/tmp/tstab mode=777 owner=vara group=bat22a 
